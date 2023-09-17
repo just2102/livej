@@ -1,18 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { Post, Prisma } from '@prisma/client';
+import { Article, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
-export class PostService {
+export class ArticlesService {
   constructor(private prisma: PrismaService) {}
 
-  async createPost(createPostDto: Prisma.PostCreateInput): Promise<Post> {
-    return await this.prisma.post.create({
-      data: createPostDto,
+  async createArticle(
+    createArticleDto: Prisma.ArticleCreateInput,
+  ): Promise<Article> {
+    return await this.prisma.article.create({
+      data: createArticleDto,
     });
   }
 
-  async getAllPosts(pages = 1): Promise<Post[]> {
+  async getAllArticles(pages = 1): Promise<Article[]> {
     const numOfPostsOnPage = 10;
     const maxPagesLimit = 100;
     if (pages < 1 || pages > maxPagesLimit) {
@@ -23,14 +25,14 @@ export class PostService {
 
     const skip = (pages - 1) * numOfPostsOnPage;
 
-    return await this.prisma.post.findMany({
+    return await this.prisma.article.findMany({
       skip: skip,
       take: numOfPostsOnPage,
     });
   }
 
-  async getPostById(id: string): Promise<Post | null> {
-    return await this.prisma.post.findFirst({
+  async getArticleById(id: string): Promise<Article | null> {
+    return await this.prisma.article.findFirst({
       where: {
         id: id,
       },

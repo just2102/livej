@@ -38,4 +38,12 @@ export class ArticlesService {
       },
     });
   }
+
+  async deleteArticleById(id: string): Promise<Article> {
+    return await this.prisma.article.delete({
+      where: {
+        id: id,
+      },
+    });
+  }
 }

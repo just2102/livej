@@ -7,10 +7,23 @@ export class ArticlesService {
   constructor(private prisma: PrismaService) {}
 
   async createArticle(
-    createArticleDto: Prisma.ArticleCreateInput,
+    createArticleDto: Prisma.ArticleCreateWithoutUserInput,
+    userEmail: string,
   ): Promise<Article> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email: userEmail,
+      },
+    });
     return await this.prisma.article.create({
-      data: createArticleDto,
+      data: {
+        ...createArticleDto,
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
+      },
     });
   }
 

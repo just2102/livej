@@ -1,16 +1,29 @@
-import { Body, Controller, Get, Post, Delete, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Query,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
 import { Prisma, Article } from '@prisma/client';
 import { ArticlesService } from './articles.service';
+import { JwtAuthGuard } from 'src/guard/jwt-auth.guard';
+import { IUserAuthContext } from 'src/auth/auth.types';
 
 @Controller('articles')
 export class ArticlesController {
   constructor(private articlesService: ArticlesService) {}
 
   @Post('/createArticle')
+  @UseGuards(JwtAuthGuard)
   async createArticle(
-    @Body() body: Prisma.ArticleCreateInput,
+    @Body() body: Prisma.ArticleCreateWithoutUserInput,
+    @Req() req: IUserAuthContext,
   ): Promise<Article> {
-    return await this.articlesService.createArticle(body);
+    return await this.articlesService.createArticle(body, req.user.email);
   }
 
   @Delete('/deleteArticleById')

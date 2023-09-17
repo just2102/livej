@@ -27,4 +27,9 @@ export class ArticlesController {
   async getArticleById(@Query('id') id: string): Promise<Article | null> {
     return await this.articlesService.getArticleById(id);
   }
+
+  @Get('/getUserArticles')
+  async getUserArticles(@Query('userId') userId: string) {
+    return await this.articlesService.getUserArticles(userId);
+  }
 }
